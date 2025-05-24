@@ -6,11 +6,11 @@ import pandas as pd
 
 class bivariateDataAnalysis(ABC):
     @abstractmethod
-    def analyze(self, df, feature1, feature2):
+    def analyze(self, df, feature1, feature2, y=None):
         pass
 
 class NumericNumericAnalysis(bivariateDataAnalysis):
-    def analyze(self, df, feature1, feature2):
+    def analyze(self, df, feature1, feature2, y=None):
         plt.figure(figsize=(10, 6))
         sns.scatterplot(x=feature1, y=feature2, data=df)
         plt.title(f"{feature1} Vs {feature2}")
@@ -19,13 +19,31 @@ class NumericNumericAnalysis(bivariateDataAnalysis):
         plt.show()
 
 class CategoricalNumericAnalysis(bivariateDataAnalysis):
-    def analyze(self, df, feature1, feature2):
+    def analyze(self, df, feature1, feature2, y=None):
         plt.figure(figsize=(10, 6))
         sns.boxplot(x=feature1, y=feature2, data=df)
         plt.title(f"{feature1} vs {feature2}")
         plt.xlabel(feature1)
         plt.ylabel(feature2)
         plt.xticks(rotation=45)
+        plt.show()
+
+class SingleVariableScatter(bivariateDataAnalysis):
+    def analyze(self, df, feature1, feature2, y=None):
+        plt.figure(figsize=(10, 6))
+        x1 = df[df[y]==0][feature1]
+        x2 = df[df[y]==1][feature1]
+
+        y1 = df[df[y]==0][feature2]
+        y2 = df[df[y]==1][feature2]
+
+        plt.scatter(x1, y1, color='blue', label='0')
+        plt.scatter(x2, y2, color='red', label='1')
+
+        plt.xlabel(feature1)
+        plt.ylabel(feature2)
+        plt.legend()
+        plt.title(f'{feature1} Vs {feature2}')
         plt.show()
 
 
@@ -56,6 +74,9 @@ class BivariateAnalyzer():
 
         if dtype1 == 'O' and dtype2 == 'O':
             print(f"'{feature1}' and '{feature2}' are a categorical feature.")
+
+    def execute_bivariate_scatter(self, df, feature1, feature2, y):
+        SingleVariableScatter().analyze(df, feature1,feature2, y)
 
 if __name__ == "__main__":
     pass
