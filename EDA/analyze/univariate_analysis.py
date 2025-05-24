@@ -40,10 +40,10 @@ class UnivariateAnalyzer():
 
         dtype = df[feature].dtype
 
-        if pd.api.types.is_numeric_dtype(dtype):
+        if dtype != 'O':
             print(f"'{feature}' is a numerical feature.")
             NumericDataAnalysis().analysis(df, feature)
-        elif pd.api.types.is_categorical_dtype(dtype) or pd.api.types.is_object_dtype(dtype):
+        elif dtype == 'O':
             print(f"'{feature}' is a categorical feature.")
             CategoricalDataAnalysis().analysis(df, feature)
         else:

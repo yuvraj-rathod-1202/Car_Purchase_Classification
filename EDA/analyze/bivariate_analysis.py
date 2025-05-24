@@ -42,19 +42,19 @@ class BivariateAnalyzer():
         dtype1 = df[feature1].dtype
         dtype2 = df[feature2].dtype
 
-        if pd.api.types.is_numeric_dtype(dtype1) and pd.api.types.is_numeric_dtype(dtype2):
+        if dtype1 != 'O' and dtype2 != 'O':
             print(f"'{feature1}' and '{feature2}' are a numerical feature.")
             NumericNumericAnalysis().analyze(df, feature1, feature2)
 
-        if pd.api.types.is_numeric_dtype(dtype1) and (pd.api.types.is_categorical_dtype(dtype2) or pd.api.types.is_object_dtype(dtype2)):
+        if dtype1 != 'O' and dtype2 == 'O':
             print(f"'{feature1} is a numerical feature and '{feature2} is a categorical feature")
             CategoricalNumericAnalysis().analyze(df, feature2, feature1)
 
-        if pd.api.types.is_numeric_dtype(dtype2) and (pd.api.types.is_categorical_dtype(dtype1) or pd.api.types.is_object_dtype(dtype1)):
+        if dtype2 != 'O' and dtype1 == 'O':
             print(f"'{feature1} is a numerical feature and '{feature2} is a categorical feature")
             CategoricalNumericAnalysis().analyze(df, feature1, feature2)
 
-        if (pd.api.types.is_categorical_dtype(dtype1) or pd.api.types.is_object_dtype(dtype1)) and (pd.api.types.is_categorical_dtype(dtype2) or pd.api.types.is_object_dtype(dtype2)):
+        if dtype1 == 'O' and dtype2 == 'O':
             print(f"'{feature1}' and '{feature2}' are a categorical feature.")
 
 if __name__ == "__main__":
