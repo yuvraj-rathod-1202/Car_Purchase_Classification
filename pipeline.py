@@ -1,6 +1,7 @@
 from extract_ingest.ingest import Ingestor
 from data_preproccesing.feature_engineering import FeatureEngineer
 from data_preproccesing.outlier_detection import OutlierProcessing
+from model_training.data_splitter import DataSplitter
 
 def pipeline():
 
@@ -11,7 +12,9 @@ def pipeline():
 
     clean_data = OutlierProcessing().process_outliers(tranformed_data, tranformed_data.columns, "IQROutlierDetection")
 
-    print(clean_data)
+    X_train, X_test, y_train, y_test = DataSplitter().split(clean_data, "Purchased", "simple")
+    
+    
 
 
 if __name__ == "__main__":
