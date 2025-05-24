@@ -17,7 +17,7 @@ class StandardScalling(FeatureEngineeringStrategy):
 
     def apply_transformation(self, df):
         df_transform = df.copy()
-        df_transform[self._feature] = self.scaler.fit_transform(df[self._feature])
+        df_transform[self._feature] = self.scaler.fit_transform(df[[self._feature]])
         return df_transform
     
 class MinMaxScalling(FeatureEngineeringStrategy):
@@ -27,30 +27,34 @@ class MinMaxScalling(FeatureEngineeringStrategy):
 
     def apply_transformation(self, df):
         df_transform = df.copy()
-        df_transform[self._feature] = self.scaler.fit_transform(df[self._feature])
+        df_transform[self._feature] = self.scaler.fit_transform(df[[self._feature]])
         df_transform
 
 class OneHotEncodding(FeatureEngineeringStrategy):
     def __init__(self, feature):
         self._feature = feature
-        self.encoder = OneHotEncoder(drop="first", sparse=False)
+        self.encoder = OneHotEncoder(drop="first", sparse_output=False)
 
     def apply_transformation(self, df):
         df_transform = df.copy()
         encoded_df = pd.DataFrame(
-            self.encoder.fit_transform(df[self._feature]),
-            columns=self.encoder.get_feature_names_out(df[self._feature])
+            self.encoder.fit_transform(df[[self._feature]]),
+            columns=self.encoder.get_feature_names_out([self._feature]),
+            index=df.index
         )
-        df_transformed = df_transformed.drop(columns=self.features).reset_index(drop=True)
-        df_transformed = pd.concat([df_transformed, encoded_df], axis=1)
-        return df_transformed
+        df_transform = df_transform.drop(columns=self._feature)
+        df_transform = pd.concat([df_transform, encoded_df], axis=1)
+        return df_transform
     
 
 class FeatureEngineer():
     def execute_transformation(self, df, feature, type):
         if type=="StandardScalling":
-            StandardScalling(feature).apply_transformation(df)
+            return StandardScalling(feature).apply_transformation(df)
         elif type=="MinMaxScalling":
-            MinMaxScalling(feature).apply_transformation(df)
+            return MinMaxScalling(feature).apply_transformation(df)
         elif type=="OneHotEncodding":
-            OneHotEncodding(feature).apply_transformation(df)
+            return OneHotEncodding(feature).apply_transformation(df)
+
+if __name__ == "__main__":
+    pass
