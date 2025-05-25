@@ -13,10 +13,11 @@ class RandomForestModelTraining(ModelTrain):
     def train(self, X_train, y_train):
         
         param_grid = {
-            'n_estimators': [50, 100, 200],
-            'max_depth': [None, 8, 10],
+            'n_estimators': [100, 200],
+            'max_depth': [None, 6, 8],
             'min_samples_split': [2, 5],
             'min_samples_leaf': [1, 2],
+            'criterion': ["gini", "entropy"],
             'max_features': ['sqrt', 'log2'],
             'bootstrap': [True, False],
         }
