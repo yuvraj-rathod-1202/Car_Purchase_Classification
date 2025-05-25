@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
 
 class ModelTrain(ABC):
     @abstractmethod
@@ -9,18 +10,22 @@ class ModelTrain(ABC):
 
 
 class RandomForestModelTraining(ModelTrain):
-    def __init__(self, n_estimators=30, criterion="entropy", boorstrap=True, random_state=42, max_depth = 6):
-        self.n_estimators = n_estimators
-        self.criterion = criterion
-        self.bootstrap = boorstrap
-        self.random_state = random_state
-        self.max_depth = max_depth
-        
     def train(self, X_train, y_train):
         
-        model = RandomForestClassifier(n_estimators=self.n_estimators, criterion=self.criterion, bootstrap=self.bootstrap, random_state=self.random_state, max_depth=self.max_depth)
-        model.fit(X_train, y_train)
-        return model
+        param_grid = {
+            'n_estimators': [50, 100, 200],
+            'max_depth': [None, 8, 10],
+            'min_samples_split': [2, 5],
+            'min_samples_leaf': [1, 2],
+            'max_features': ['sqrt', 'log2'],
+            'bootstrap': [True, False],
+        }
+
+        grid_search = GridSearchCV(RandomForestClassifier(random_state=42), param_grid, cv=5)
+        grid_search.fit(X_train, y_train)
+        print("Best parameters:", grid_search.best_params_)
+
+        return grid_search.best_estimator_
     
 class ModelTraining():
     def __init__(self, model_type):
