@@ -5,7 +5,7 @@ from model_training.data_splitter import DataSplitter
 from model_training.training import ModelTraining, RandomForestModelTraining
 
 class TrainingPipeline():
-    def training_pipeline():
+    def training_pipeline(self):
 
         data = Ingestor().ingest("C:\projects\ml_learn\EToE\data_extracted\car_data.csv")
         data.drop(columns="User ID", inplace=True)
